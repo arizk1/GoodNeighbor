@@ -1,3 +1,341 @@
 body {
     background-color: ghostwhite;
 }
+body {
+    background-color: #c0d9f4;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+/* ########################################## */
+/*  Welcome/ Login / Register / ResetPassword */
+/* ########################################## */
+
+.welcome {
+    height: 100vh;
+    width: 100vw;
+    background-image: linear-gradient(
+        to right,
+        #21086d,
+        #21086d 50%,
+        #c0d9f4 50%
+    );
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+.welcome-container {
+    width: 80%;
+    height: 80%;
+    border: 0px solid white;
+    background-image: linear-gradient(to right, white, white 50%, #c0d9f4 50%);
+    border-radius: 20px;
+    box-shadow: 0px 10px 30px 0px rgb(74, 73, 73);
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+}
+.welcome-img img {
+    /* background-image: url("/welcomepic.png"); */
+    height: 60%;
+    width: 60%;
+    opacity: 0.5;
+}
+.welcome-img {
+    position: absolute;
+    bottom: 10%;
+    /* z-index: 100; */
+}
+
+.welcome-text {
+    float: left;
+    position: absolute;
+    top: 20%;
+    max-width: 50vh;
+    /* z-index: 1000; */
+}
+
+.welcome-table {
+    /* float: right; */
+    position: absolute;
+    top: 40%;
+    left: 60vw;
+    transform: translate(-50%, -50%);
+    padding-top: 50px;
+}
+
+.welcome-table h2 {
+    font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    position: relative;
+    padding: 20px 0 0 20px;
+    font-weight: bolder;
+    font-size: xx-large;
+}
+
+.welcome-table h1 {
+    font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-weight: bolder;
+    font-size: x-large;
+    padding: 30px 0;
+}
+.welcome-table h4 {
+    font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    /* padding-top: 10px; */
+    /* padding-left: 20px; */
+    font-weight: bold;
+    font-size: large;
+}
+
+.welcome-text h2 {
+    font-size: 3vw;
+    text-align: center;
+    padding: 20px;
+}
+
+.welcome-text h4 {
+    font-size: 2vw;
+    text-align: center;
+}
+/* ################################## */
+/*              FORMS                 */
+/* ################################## */
+
+.form1 {
+    margin: auto;
+    max-width: 400px;
+    padding: 20px 12px 10px 20px;
+    font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+.form1 li {
+    padding: 0;
+    display: block;
+    list-style: none;
+    margin: 10px 0 0 0;
+}
+.form1 label {
+    margin: 0 0 3px 0;
+    padding: 0px;
+    display: block;
+    font-weight: bold;
+}
+.form1 input[type="text"],
+.form1 input[type="number"],
+.form1 input[type="password"],
+.form1 input[type="url"],
+.form1 input[type="email"] {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    border: 1px solid #bebebe;
+    padding: 7px;
+    margin: 0px;
+    /* animation for the shadow! */
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    /* animation for the shadow! */
+    outline: none;
+}
+.form1 input[type="text"]:focus,
+.form1 input[type="password"]:focus,
+.form1 input[type="number"]:focus,
+.form1 input[type="url"]:focus,
+.form1 input[type="email"]:focus {
+    -moz-box-shadow: 0 0 8px #21086d;
+    -webkit-box-shadow: 0 0 8px #21086d;
+    box-shadow: 0 0 8px #21086d;
+    border: 1px solid #21086d;
+}
+.form1 .field-divided {
+    width: 49%;
+}
+
+.form1 .field-long {
+    width: 100%;
+}
+.form1 .field-select {
+    width: 100%;
+}
+.form1 .field-textarea {
+    height: 100px;
+}
+.form1 input[type="submit"],
+.form1 input[type="button"],
+.form1 input[type="edit"] {
+    background: #21086d;
+    padding: 8px 30px 8px 30px;
+    border: none;
+    color: #fff;
+}
+.form1 input[type="submit"]:hover,
+.form1 input[type="button"]:hover,
+.form1 input[type="edit"]:hover {
+    background: #21086d;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    cursor: pointer;
+}
+.form1 .required {
+    color: red;
+}
+/* ################################## */
+/*              Profile               */
+/* ################################## */
+.profile-pic-uploader {
+    position: absolute;
+    height: 20%;
+    width: 30%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(255, 255, 255, 0.5);
+    margin: auto;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 10000;
+}
+
+.profile-pic-uploader button {
+    background: #21086d;
+    padding: 8px 30px 8px 30px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+.profile-pic-uploader h3 {
+    padding-bottom: 30px;
+}
+
+/* ################################## */
+/*              NAV BAR               */
+/* ################################## */
+
+.app-container {
+    display: grid;
+    height: 100vh;
+    width: 100vw;
+    grid-template-rows: 8% 92%;
+    gap: 0px;
+}
+
+.topnav {
+    grid-column-start: 1;
+    grid-column-end: -1;
+    background-color: white;
+    /* position: absolute; */
+    top: 0px;
+    /* box-shadow: 0 5px 15px; */
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100vw;
+}
+
+.logo img {
+    justify-self: flex-start;
+    height: 70px;
+    width: 170px;
+    align-self: center;
+    padding: 5px;
+}
+
+.topnavL {
+    overflow: hidden;
+    position: absolute;
+    right: 10%;
+    display: flex;
+    padding: 10px;
+    flex-wrap: wrap;
+}
+
+.topnav-links {
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+.topnav-links img {
+    height: 20px;
+    width: 30px;
+    object-fit: contain;
+    border-radius: 7%;
+}
+
+.topnav-links button {
+    color: black;
+    text-align: center;
+    border: none;
+    background-color: transparent;
+    padding: 0px 0px;
+    text-decoration: underline;
+    font-size: 17px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    cursor: pointer;
+}
+
+.topnav-pic {
+    right: 2%;
+    position: absolute;
+    align-items: center;
+    align-content: center;
+
+    display: flex;
+}
+
+.profile-pic {
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
+    border-radius: 7%;
+}
+
+.profile-pic-container .profile-pic {
+    height: 250px !important;
+    width: 250px !important;
+    position: relative;
+    object-fit: cover;
+    left: 20px;
+    border-radius: 20%;
+    padding: 20px 0;
+}
+
+.profile-container img {
+    height: 350px;
+    width: 250px;
+    position: relative;
+    /* object-fit: cover; */
+    left: 20px;
+    border-radius: 10%;
+    padding: 20px 0 0 0;
+}
+
+.tool-pic-container img {
+    height: 40%;
+    width: 20%;
+    position: relative;
+    object-fit: fill;
+    left: 20px;
+    border-radius: 10%;
+    padding: 20px 0 0 0;
+}
+
+.tool-pic-container {
+    position: absolute;
+    top: 20%;
+    left: 5%;
+}
+.add-tool {
+    position: absolute;
+    top: 20%;
+    left: 30%;
+}
