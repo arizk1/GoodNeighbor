@@ -1,6 +1,6 @@
-//##################################
-//###### SETTINGS & MODULES #######
-//#################################
+//*##################################
+//*###### SETTINGS & MODULES #######
+//*#################################
 
 const express = require("express");
 const app = express();
@@ -26,6 +26,7 @@ const { s3Url } = require("./config");
 const multer = require("multer");
 const uidSafe = require("uid-safe");
 const { truncate } = require("fs");
+const { json } = require("express");
 let secrets;
 if (process.env.NODE_ENV == "production") {
     secrets = process.env; // in prod the secrets are environment variables
@@ -33,9 +34,9 @@ if (process.env.NODE_ENV == "production") {
     secrets = require("./secrets"); // in dev they are in secrets.json which is listed in .gitignore
 }
 
-//##################################
-//######    MIDDLEWARES     #######
-//#################################
+//*##################################
+//*######    MIDDLEWARES     #######
+//*#################################
 
 app.use(compression());
 
@@ -89,56 +90,70 @@ app.use(express.static("public"));
 
 app.post("/register", (req, res) => {
     const { first, last, email, password } = req.body;
-    hash(password)
-        .then((hashedPW) => {
-            console.log(hashedPW);
-            db.addUser(first, last, email, hashedPW)
-                .then(({ rows }) => {
-                    // console.log(rows);
-                    req.session.userId = rows[0].id;
-                    // req.session.logedin = true;
-                    res.json({ success: true });
-                })
-                .catch((err) => {
-                    console.log("error in registration", err);
-                    res.json({ error: true });
-                });
-        })
-        .catch((err) => {
-            console.log("error in hashing password", err);
-            res.json({ error: true });
+    if (!first || !last || !password || !email || !email.includes("@")) {
+        console.log("invalid input into fields");
+        res.json({
+            error: true,
         });
+    } else {
+        hash(password)
+            .then((hashedPW) => {
+                console.log(hashedPW);
+                db.addUser(first, last, email, hashedPW)
+                    .then(({ rows }) => {
+                        // console.log(rows);
+                        req.session.userId = rows[0].id;
+                        // req.session.logedin = true;
+                        res.json({ success: true });
+                    })
+                    .catch((err) => {
+                        console.log("error in registration", err);
+                        res.json({ error: true });
+                    });
+            })
+            .catch((err) => {
+                console.log("error in hashing password", err);
+                res.json({ error: true });
+            });
+    }
 });
 
 app.post("/login", (req, res) => {
     const { email, password } = req.body;
-    db.checkUserPW(email)
-        .then(({ rows }) => {
-            let hashedPW = rows[0].password;
-            compare(password, hashedPW).then((result) => {
-                console.log(result);
-                if (result) {
-                    db.getUserIdByEmail(email)
-                        .then(({ rows }) => {
-                            req.session.userId = rows[0].id;
-                            res.json({ success: true });
-                        })
-                        .catch((err) => {
-                            console.log("error in logging", err);
-                            res.json({ error: true });
-                        });
-                } else {
-                    return;
-                }
-            });
-        })
-        .catch((err) => {
-            console.log(
-                "error in logging, Email or Password is incorrect",
-                err
-            );
-            res.json({ error: true });
+    if (!password || !email) {
+        console.log("invalid input into fields");
+        res.json({
+            error: true,
         });
+    } else {
+        db.checkUserPW(email)
+            .then(({ rows }) => {
+                let hashedPW = rows[0].password;
+                return compare(password, hashedPW).then((result) => {
+                    console.log(result);
+                    if (result) {
+                        db.getUserIdByEmail(email)
+                            .then(({ rows }) => {
+                                req.session.userId = rows[0].id;
+                                res.json({ success: true });
+                            })
+                            .catch((err) => {
+                                console.log("error in logging", err);
+                                res.json({ error: true });
+                            });
+                    } else {
+                        return;
+                    }
+                });
+            })
+            .catch((err) => {
+                console.log(
+                    "error in logging, Email or Password is incorrect",
+                    err
+                );
+                res.json({ error: true });
+            });
+    }
 });
 
 app.post("/password/reset/start", (req, res) => {
@@ -148,26 +163,31 @@ app.post("/password/reset/start", (req, res) => {
     }
     db.getUserIdByEmail(email)
         .then(({ rows }) => {
-            console.log(rows);
-            const secretCode = cryptoRandomString({
-                length: 6,
-            });
-            console.log(secretCode);
-            db.addCode(email, secretCode).then(({ rows }) => {
-                console.log({ rows });
-                sendEmail(
-                    "arizk991@gmail.com",
-                    rows[0].code,
-                    "here is your code to reset your password"
-                )
-                    .then(() => {
-                        res.json({ sucess: true });
-                    })
-                    .catch((err) => {
-                        console.log("error in sending email", err);
-                        res.json({ error: true });
-                    });
-            });
+            if (rows.length == 0) {
+                res.json({
+                    error: true,
+                });
+            } else {
+                console.log("RESET 1", rows);
+                const secretCode = cryptoRandomString({
+                    length: 6,
+                });
+                return db.addCode(email, secretCode).then(({ rows }) => {
+                    console.log("RESET 2", rows);
+                    return sendEmail(
+                        "arizk991@gmail.com",
+                        rows[0].code,
+                        "here is your code to reset your password"
+                    )
+                        .then(() => {
+                            res.json({ sucess: true });
+                        })
+                        .catch((err) => {
+                            console.log("error in sending email", err);
+                            res.json({ error: true });
+                        });
+                });
+            }
         })
         .catch((err) => {
             console.log("error in getting email", err);
@@ -175,27 +195,66 @@ app.post("/password/reset/start", (req, res) => {
         });
 });
 
+// app.post("/password/reset/verify", (req, res) => {
+//     const { password, code } = req.body;
+//     db.compareCodes()
+//         .then(({ rows }) => {
+//             let match = rows.find((item) => item.code === code);
+//             if (match) {
+//                 console.log("RESET 3", rows);
+//                 return hash(password).then((hashedPW) => {
+//                     db.editPassword(hashedPW, match.email)
+//                         .then(({ rows }) => {
+//                             console.log("RESET 4", rows);
+//                             if (rows) {
+//                                 res.json({ sucess: true });
+//                             }
+//                         })
+//                         .catch((err) => {
+//                             console.log("error in editing the password", err);
+//                             res.json({ error: true });
+//                         });
+//                 });
+//             }
+//         })
+//         .catch((err) => {
+//             console.log("error in comparing the codes", err);
+//             res.json({ error: true });
+//         });
+// });
+
 app.post("/password/reset/verify", (req, res) => {
-    const { password, code } = req.body;
-    db.compareCodes(code)
+    const { code, pw } = req.body;
+    db.compareCodes()
         .then(({ rows }) => {
-            console.log(rows);
-            hash(password).then((hashedPW) => {
-                console.log(hashedPW);
-                db.editPassword(hashedPW, req.session.userId)
-                    .then(({ rows }) => {
-                        console.log(rows);
-                        res.json({ sucess: true });
+            let match = rows.find((item) => item.code === code);
+            if (match) {
+                return hash(pw)
+                    .then((hashedPw) => {
+                        return db.editPassword(hashedPw, match.email);
+                    })
+                    .then(() => {
+                        console.log(
+                            "successfully updated pw in database table users"
+                        );
+                        res.json({
+                            error: false,
+                        });
                     })
                     .catch((err) => {
-                        console.log("error in editing the password", err);
-                        res.json({ error: true });
+                        console.log(
+                            "error in db.updatePw() or in hash(): ",
+                            err
+                        );
                     });
-            });
+            } else {
+                res.json({
+                    error: true,
+                });
+            }
         })
         .catch((err) => {
-            console.log("error in comparing the codes", err);
-            res.json({ error: true });
+            console.log("error in db.validateResetCode(): ", err);
         });
 });
 
@@ -222,10 +281,10 @@ app.post(
         if (req.file) {
             db.addProfilePic(url, userId)
                 .then(({ rows }) => {
-                    if (rows[0].profile_pic) {
-                        const filename = rows[0].profile_pic.replace(s3Url, "");
-                        s3.delete(filename);
-                    }
+                    // if (rows[0].profile_pic) {
+                    //     const filename = rows[0].profile_pic.replace(s3Url, "");
+                    //     s3.delete(filename);
+                    // }
                     res.json(rows[0]);
                 })
                 .catch((err) => {
@@ -286,21 +345,28 @@ app.get(`/user-data/:id`, (req, res) => {
         .then(({ rows }) => {
             res.json(rows);
         })
-        .catch((err) => console.log("error in getting other profile:", err));
+        .catch((err) => {
+            console.log("error in getting other profile:", err);
+            res.json({ error: true });
+        });
 });
-//##################################
-//####   ACCOUNT SETTINGS ######
-//#################################
+//*##################################
+//*####   ACCOUNT SETTINGS ######
+//*#################################
 app.post("/user/address", (req, res) => {
     const { postal_code, house_number, street, city } = req.body;
 
+    console.log(postal_code, house_number, street, city);
     const userId = req.session.userId;
     db.addAddress(postal_code, house_number, street, city, userId)
         .then(({ rows }) => {
             console.log(rows);
-            res.json(rows);
+            res.json({ success: true });
         })
-        .catch((err) => console.log("error in getting other profile:", err));
+        .catch((err) => {
+            console.log("error in /user/address", err);
+            res.json({ error: true });
+        });
 });
 
 app.post("/user/account/edit", (req, res) => {
@@ -332,6 +398,7 @@ app.post("/user/account/edit", (req, res) => {
                 })
                 .catch((err) => {
                     console.log("error in updating address", err);
+                    res.json({ error: true });
                 });
         });
     } else {
@@ -349,13 +416,14 @@ app.post("/user/account/edit", (req, res) => {
             })
             .catch((err) => {
                 console.log("error in updating without password", err);
+                res.json({ error: true });
             });
     }
 });
 
-//##################################
-//####  ADD TOOL/ GET TOOLS  ######
-//#################################
+//*##################################
+//*####  ADD TOOL/ GET TOOLS  ######
+//*#################################
 app.post("/add-tool", (req, res) => {
     const { type, title, description, condition } = req.body;
     const userId = req.session.userId;
@@ -366,7 +434,10 @@ app.post("/add-tool", (req, res) => {
             req.session.toolId = rows[0].id;
             res.json({ ...rows, success: true });
         })
-        .catch((err) => console.log("error in /add-tool", err));
+        .catch((err) => {
+            console.log("error in /add-tool", err);
+            res.json({ error: true });
+        });
 });
 
 app.post("/add/item/pic", uploader.single("image"), s3.upload, (req, res) => {
@@ -378,10 +449,10 @@ app.post("/add/item/pic", uploader.single("image"), s3.upload, (req, res) => {
     if (req.file) {
         db.addToolPic(url, userId, toolId)
             .then(({ rows }) => {
-                if (rows[0].url) {
-                    const filename = rows[0].url.replace(s3Url, "");
-                    s3.delete(filename);
-                }
+                // if (rows[0].url) {
+                //     const filename = rows[0].url.replace(s3Url, "");
+                //     s3.delete(filename);
+                // }
                 res.json(rows[0]);
             })
             .catch((err) => {
@@ -417,25 +488,265 @@ app.get("/tool/delete/pic", (req, res) => {
         });
 });
 
-app.get("/user/:id/:toolid", (req, res) => {
+app.get("/item/:toolid", (req, res) => {
     console.log("yes!");
-    console.log(req.params);
-    // const id = req.session.userId;
-    // const tool_id = req.params.tool_id;
-    // console.log(tool_id);
+    const { id, toolid } = req.params;
+    console.log(id, toolid);
+    db.getToolinfo(toolid)
+        .then(({ rows }) => {
+            console.log(rows);
+            res.json(rows);
+        })
+        .catch((err) => {
+            console.log("error in /item/:toolid", err);
+            res.json({ success: false });
+        });
+});
+
+//*##################################
+//*####      GET ALL ITEMS     ######
+//*### make-available/ unavaliable ##
+//*##################################
+
+app.get("/get-items", (req, res) => {
+    const userId = req.session.userId;
+    db.getAllItems(userId)
+        .then(({ rows }) => {
+            res.json(rows);
+        })
+        .catch((err) => {
+            console.log("error in /get-items", err);
+            res.json({ success: false });
+        });
+});
+
+app.post("/make-unavailable", (req, res) => {
+    const userId = req.session.userId;
+    const { itemId } = req.body;
+
+    db.makeUnavailable(userId, itemId)
+        .then(() => {
+            res.json({ success: true });
+        })
+        .catch((err) => {
+            console.log("error in /make-unavailable", err);
+            res.json({ success: false, error: true });
+        });
+});
+
+app.post("/make-available", (req, res) => {
+    const userId = req.session.userId;
+    const { itemId } = req.body;
+    console.log({ itemId });
+    db.makeAvailable(userId, itemId)
+        .then(() => {
+            res.json({ success: true });
+        })
+        .catch((err) => {
+            console.log("error in /make-available", err);
+            res.json({ success: false, error: true });
+        });
+});
+
+app.post("/remove-item", (req, res) => {
+    const userId = req.session.userId;
+    const { itemId } = req.body;
+    db.removeItem(userId, itemId)
+        .then(() => {
+            res.json({ success: true });
+        })
+        .catch((err) => {
+            console.log("error in /remove-item", err);
+            res.json({ success: false, error: true });
+        });
+});
+
+//*##################################
+//*####        BORROW BTN        ####
+//*##################################
+const BUTTON_TEXT = {
+    MAKE_REQUEST: "Borrow Item",
+    CANCEL_REQUEST: "Cancel Request",
+    MAKE_UNAVAILABLE: "Make Unavailable",
+    MAKE_AVAILABLE: "Make Available",
+};
+app.get("/request-status/:itemId", (req, res) => {
+    const userId = req.session.userId;
+    const { itemId } = req.params;
+    console.log(itemId);
+    db.getOwnerId(itemId)
+        .then(({ rows }) => {
+            console.log(rows);
+            if (rows[0].user_id === userId) {
+                if (rows[0].available === true) {
+                    res.json(BUTTON_TEXT.MAKE_UNAVAILABLE);
+                } else {
+                    res.json(BUTTON_TEXT.MAKE_AVAILABLE);
+                }
+            } else {
+                db.checkStatus(itemId, userId).then(({ rows }) => {
+                    if (!rows[0]) {
+                        res.json(BUTTON_TEXT.MAKE_REQUEST);
+                    }
+                    if (rows[0]) {
+                        if (rows[0].accepted == false) {
+                            // if (rows[0].sender_id == userId) {
+                            res.json(BUTTON_TEXT.CANCEL_REQUEST);
+                            // }
+                        }
+                    }
+                });
+            }
+        })
+        .catch((err) => {
+            console.log("error in .. /request-status", err);
+            res.json({ error: true });
+        });
+});
+
+app.post("/update/request-status", (req, res) => {
+    const userId = req.session.userId;
+    const { action, itemId } = req.body;
+    console.log("itemid update request", itemId);
+
+    if (action === BUTTON_TEXT.MAKE_REQUEST) {
+        db.getOwnerId(itemId)
+            .then(({ rows }) => {
+                const ownerId = rows[0].user_id;
+                db.sendBorrowRequest(itemId, ownerId, userId).then(() => {
+                    res.json(BUTTON_TEXT.CANCEL_REQUEST);
+                });
+            })
+            .catch((err) =>
+                console.log("error in .. make Borrow Request", err)
+            );
+    }
+    if (action === BUTTON_TEXT.CANCEL_REQUEST) {
+        db.cancelBorrowRequest(itemId, userId)
+            .then(() => {
+                res.json(BUTTON_TEXT.MAKE_REQUEST);
+            })
+            .catch((err) =>
+                console.log("error in .. CANCEL Borrow Request", err)
+            );
+    }
+    if (action === BUTTON_TEXT.MAKE_UNAVAILABLE) {
+        db.makeUnavailable(userId, itemId)
+            .then(() => {
+                res.json(BUTTON_TEXT.MAKE_AVAILABLE);
+            })
+            .catch((err) =>
+                console.log("error in .. btn make unavailable", err)
+            );
+    }
+    if (action === BUTTON_TEXT.MAKE_AVAILABLE) {
+        db.makeAvailable(userId, itemId)
+            .then(() => {
+                res.json(BUTTON_TEXT.MAKE_UNAVAILABLE);
+            })
+            .catch((err) => console.log("error in .. btn make Available", err));
+    }
+});
+
+//*##################################
+//*####     HandleBorrowReq      ####
+//*##################################
+
+app.get("/borrow-requests", (req, res) => {
+    const userId = req.session.userId;
+    db.getBorrowRequests(userId)
+        .then(({ rows }) => {
+            res.json(rows);
+            console.log(rows);
+        })
+        .catch((err) => {
+            console.log("error in /borrow-requests", err);
+            res.json({ success: false });
+        });
+});
+
+app.post("/accept-req", (req, res) => {
+    const userId = req.session.userId;
+    const { itemId, borwerId, val } = req.body;
+    const { date } = val;
+
+    db.acceptBorrowRequest(itemId, userId)
+        .then(() => {
+            db.handleBorrowRequest(date, borwerId, itemId).then(() => {
+                res.json({ success: true });
+            });
+        })
+        .catch((err) => {
+            console.log("error in /accept-req or handel", err);
+            res.json({ success: false });
+        });
+});
+
+app.post("/reject-req", (req, res) => {
+    const userId = req.session.userId;
+    const { itemId } = req.body;
+    db.rejectBorrowRequest(itemId, userId)
+        .then(() => {
+            res.json({ success: true });
+        })
+        .catch((err) => {
+            console.log("error in /reject-req", err);
+            res.json({ success: false });
+        });
 });
 
 //##################################
-//####        GOOGLE MAPS    ######
+//####      Add Coordinates   ######
 //#################################
 
 app.post("/user-location", (req, res) => {
     const userId = req.session.userId;
     const { lng, lat, placeId } = req.body;
-    db.addCoordinates(lat, lng, placeId, userId).then(({ rows }) => {
-        console.log(rows);
-        res.json({ success: true });
-    });
+    db.addCoordinates(lat, lng, placeId, userId)
+        .then(({ rows }) => {
+            console.log(rows);
+            res.json({ success: true });
+        })
+        .catch((err) => {
+            console.log("error in /user-location", err);
+            res.json({ success: false, error: true });
+        });
+});
+
+//*##################################
+//*######  SEARCH COMPONENT  #######
+//*#################################
+
+app.get(`/find/recent/items`, (req, res) => {
+    const userId = req.session.userId;
+
+    db.getUserLoc(userId)
+        .then(({ rows }) => {
+            const { lng, lat } = rows[0];
+            console.log(lng, lat);
+            db.getRecentItems(lat, lng).then((data) => {
+                console.log(data.rows);
+                res.json(data.rows);
+            });
+        })
+        .catch((err) => console.log("error in /find/recent/items", err));
+});
+
+app.get(`/find/items/:query`, (req, res) => {
+    const { query } = req.params;
+    const titel = query.replace(/^:+/, "");
+    const userId = req.session.userId;
+
+    db.getUserLoc(userId)
+        .then(({ rows }) => {
+            const { lng, lat } = rows[0];
+            console.log(lng, lat);
+            db.searchFor(titel, lat, lng).then((data) => {
+                console.log(data.rows);
+                res.json(data.rows);
+            });
+        })
+        .catch((err) => console.log("error in /find/items/:query", err));
 });
 
 //##################################

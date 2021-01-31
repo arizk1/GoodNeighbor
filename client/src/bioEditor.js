@@ -40,7 +40,7 @@ export default class BioEditor extends Component {
                     <div className="bio-button">
                         <textarea
                             rows="4"
-                            cols="50"
+                            cols="30"
                             defaultValue={this.props.bio}
                             onChange={(e) => this.handleChange(e)}
                         />

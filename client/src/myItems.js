@@ -3,14 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { getItems, unavailable, available, returned, remove } from "./action";
 import { Link } from "react-router-dom";
 
-export default function MyItems(props) {
-    const userId = props.id;
+export default function MyItems({ userId }) {
+    // const userId = props.id;
     const dispatch = useDispatch();
     const myItems = useSelector(
         (state) =>
             state.items &&
             state.items.filter(
-                (item) => item.available && item.user_id === userId
+                (item) => item.available == true && item.user_id === userId
             )
     );
 
@@ -18,7 +18,7 @@ export default function MyItems(props) {
         (state) =>
             state.items &&
             state.items.filter(
-                (item) => !item.available && item.user_id === userId
+                (item) => item.available == false && item.user_id === userId
             )
     );
     const borrowedItems = useSelector(
@@ -29,7 +29,6 @@ export default function MyItems(props) {
 
     useEffect(() => {
         dispatch(getItems());
-        console.log("props", props.id);
     }, []);
 
     if (!myItems) {
@@ -37,24 +36,40 @@ export default function MyItems(props) {
     }
     return (
         <>
-            <div className="my Items">
-                <h1>My Items</h1>
+            <div className="my-Items">
+                <h1>Items Manager</h1>
+                <p>
+                    You can easily track where are your items, <br />{" "}
+                    temporarily make them unavailable or remove them permanently
+                </p>
+
                 {myItems.length && (
                     <div>
+                        <h3>My Available Items</h3>
                         <div className="items-container">
                             {myItems.map((item) => (
-                                <div key={item.id} className="card">
-                                    {/* <Link to={`/user/${user.id}`}> */}
-                                    <img src={item.url} />
-                                    {/* </Link> */}
-                                    {/* <Link to={`/user/${user.id}`}> */}
-                                    <h2>
-                                        {item.type} {item.title}
-                                    </h2>
-                                    {/* </Link> */}
+                                <div key={item.id} className="items-card">
+                                    <div className="items-pic">
+                                        {item.url && <img src={item.url} />}
+                                        {!item.url && item.type == "book" && (
+                                            <img src="./book.png" />
+                                        )}
+                                        {!item.url && item.type == "tool" && (
+                                            <img src="./tools.png" />
+                                        )}
+
+                                        {!item.url &&
+                                            item.type == "equipment" && (
+                                                <img src="./eqip.png" />
+                                            )}
+                                    </div>
+                                    <div className="item-data">
+                                        <h3>#{item.type}</h3>
+                                        <h2>{item.title}</h2>
+                                    </div>
                                     <div className="edit-buttons">
                                         <button
-                                            id="unavailable"
+                                            id="available"
                                             onClick={() =>
                                                 dispatch(unavailable(item.id))
                                             }
@@ -77,28 +92,38 @@ export default function MyItems(props) {
                 )}
                 {!myItems.length && (
                     <div>
-                        <h1>
-                            There is no any item yet. Add item, be a
-                            goodNeighbor
-                        </h1>
+                        <p>
+                            There is no any available item. Add some and be a
+                            goodNeighbor ♥️
+                        </p>
                     </div>
                 )}
             </div>
             <div className="unavailable-items">
-                <h1>My Unavailable Items</h1>
+                <h3>My Unavailable Items</h3>
                 {unavailableItems.length && (
                     <div>
                         <div className="items-container">
                             {unavailableItems.map((item) => (
-                                <div key={item.id} className="card">
-                                    {/* <Link to={`/user/${user.id}`}> */}
-                                    <img src={item.url} />
-                                    {/* </Link> */}
-                                    {/* <Link to={`/user/${user.id}`}> */}
-                                    <h2>
-                                        {item.type} {item.title}
-                                    </h2>
-                                    {/* </Link> */}
+                                <div key={item.id} className="items-card">
+                                    <div className="items-pic">
+                                        {item.url && <img src={item.url} />}
+                                        {!item.url && item.type == "book" && (
+                                            <img src="./book.png" />
+                                        )}
+                                        {!item.url && item.type == "tool" && (
+                                            <img src="./tools.png" />
+                                        )}
+
+                                        {!item.url &&
+                                            item.type == "equipment" && (
+                                                <img src="./eqip.png" />
+                                            )}
+                                    </div>
+                                    <div className="item-data">
+                                        <h3>#{item.type}</h3>
+                                        <h2>{item.title}</h2>
+                                    </div>
                                     <div className="edit-buttons">
                                         <button
                                             id="available"
@@ -124,29 +149,40 @@ export default function MyItems(props) {
                 )}
                 {!unavailableItems.length && (
                     <div>
-                        <h1>All your items are available</h1>
+                        <p>All your items are available.</p>
                     </div>
                 )}
             </div>
             <div className="borrowed-items">
-                <h1>Borrowed Items </h1>
-                {borrowedItems.length >= 0 && (
+                <h3>My Borrowed Items </h3>
+                {borrowedItems.length && (
                     <div>
                         <div className="items-container">
                             {borrowedItems.map((item) => (
-                                <div key={item.id} className="card">
-                                    {/* <Link to={`/user/${user.id}`}> */}
-                                    <img src={item.url} />
-                                    {/* </Link> */}
-                                    {/* <Link to={`/user/${user.id}`}> */}
-                                    <h2>
-                                        {item.type} {item.title}
-                                    </h2>
-                                    <h2>{item.until}</h2>
-                                    {/* </Link> */}
+                                <div key={item.id} className="items-card">
+                                    <div className="items-pic">
+                                        {item.url && <img src={item.url} />}
+                                        {!item.url && item.type == "book" && (
+                                            <img src="./book.png" />
+                                        )}
+                                        {!item.url && item.type == "tool" && (
+                                            <img src="./tools.png" />
+                                        )}
+
+                                        {!item.url &&
+                                            item.type == "equipment" && (
+                                                <img src="./eqip.png" />
+                                            )}
+                                    </div>
+                                    <div className="item-data">
+                                        <h3>#{item.type}</h3>
+                                        <h2>{item.title}</h2>
+                                        <h2>{item.until}</h2>
+                                    </div>
+
                                     <div className="edit-buttons">
                                         <button
-                                            id="unavilable"
+                                            id="available"
                                             onClick={() =>
                                                 dispatch(returned(item.id))
                                             }
@@ -161,9 +197,9 @@ export default function MyItems(props) {
                 )}
                 {!borrowedItems.length && (
                     <div>
-                        <h4>
-                            There are so many stuff out there, go borrow some!
-                        </h4>
+                        <p>
+                            There are so many stuff out there, go borrow some 🤓
+                        </p>
                     </div>
                 )}
             </div>

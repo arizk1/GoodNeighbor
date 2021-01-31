@@ -2,20 +2,21 @@ import { Component } from "react";
 import ProfilePic from "./profilepic";
 import Uploader from "./uploader";
 import axios from "./axios";
-import Profile from "./profile";
+// import Profile from "./profile";
 import { BrowserRouter, Route, Link } from "react-router-dom";
 // import OtherProfile from "./otherProfile";
 import Welcome from "./welcome";
 import Account from "./account";
-import GoogleMap from "./google";
 import AddTool from "./addTool";
-import Tool from "./tool";
+// import Tool from "./tool";
 import MyItems from "./myItems";
+// import Borrowbtn from "./borrowbtn";
+import BorrowReq from "./handelReq";
+import Home from "./home";
 
 export default class App extends Component {
     constructor() {
         super();
-        // I'm hardcoding but you will be retrieving this data from axios!
         this.state = {
             first: null,
             last: null,
@@ -24,7 +25,6 @@ export default class App extends Component {
             bio: null,
             uploaderIsVisible: false,
         };
-        // we could bind setImage with the arrow function syntax, too!
         this.setImage = this.setImage.bind(this);
         this.toggleUploader = this.toggleUploader.bind(this);
         this.addBio = this.addBio.bind(this);
@@ -85,73 +85,95 @@ export default class App extends Component {
             <>
                 <BrowserRouter>
                     <div className="app-container">
+                        <div className="logo">
+                            <Link to="/">
+                                <img src="/logo4.png" />
+                            </Link>
+                        </div>
                         <section className="topnav">
-                            <div className="logo">
-                                <Link to="/">
-                                    {/* <img src="/logo2.png" /> */}
-                                </Link>
-                                <h1>GoodNeighbor</h1>
-                            </div>
                             <div className="topnavL">
-                                {/* <div className="topnav-links">
-                                    <Link to="/message">messages</Link>
-                                </div> */}
+                                <div className="topnav-links">
+                                    <Link to="/">
+                                        <img src="/home3.png" />
+                                    </Link>
+                                    <span className="tooltiptext">Home</span>
+                                </div>
 
                                 <div className="topnav-links">
                                     <Link to="/add">
-                                        <img src="/conifer-plus.png" />
+                                        <img src="/add2.png" />
                                     </Link>
+                                    <span className="tooltiptext">
+                                        Add Item
+                                    </span>
                                 </div>
                                 <div className="topnav-links">
                                     <Link to="/my-items">
-                                        <img src="/flame-527.png" />
+                                        <img src="/tools2.png" />
                                     </Link>
+                                    <span className="tooltiptext">
+                                        My Items
+                                    </span>
                                 </div>
                                 <div className="topnav-links">
-                                    <Link to="/messages">
-                                        <img src="/flame-119.png" />
+                                    <Link to="/message">
+                                        <img src="/message2.png" />
                                     </Link>
+                                    <span className="tooltiptext">
+                                        Messages
+                                    </span>
                                 </div>
                                 <div className="topnav-links">
                                     <Link to="/requests">
-                                        <img src="/flame-75.png" />
+                                        <img src="/notification.png" />
                                     </Link>
+                                    <span className="tooltiptext">
+                                        Requests
+                                    </span>
                                 </div>
                                 <div className="topnav-links">
+                                    <Link to="/account">
+                                        <img src="/settings.png" />
+                                        <span className="tooltiptext">
+                                            Account Settings
+                                        </span>
+                                    </Link>
+                                </div>
+
+                                <div className="topnav-links">
                                     <button onClick={() => this.logout()}>
-                                        Logout
+                                        <img src="/logout.png" />
                                     </button>
+                                    <span className="tooltiptext">Logout</span>
                                 </div>
                             </div>
-
-                            <div className="topnav-pic">
-                                <ProfilePic
-                                    toggleUploader={this.toggleUploader}
-                                    first={this.state.first}
-                                    last={this.state.last}
-                                    profile_pic={this.state.profile_pic}
-                                />
-                            </div>
                         </section>
+
+                        <div className="topnav-pic">
+                            <ProfilePic
+                                // toggleUploader={this.toggleUploader}
+                                first={this.state.first}
+                                last={this.state.last}
+                                profile_pic={this.state.profile_pic}
+                            />
+                        </div>
 
                         {this.state.uploaderIsVisible && (
                             <Uploader setImage={this.setImage} />
                         )}
 
-                        {/* <Route
+                        <Route
                             exact
                             path="/"
                             render={() => (
-                                <Profile
+                                <Home
                                     first={this.state.first}
                                     last={this.state.last}
                                     profile_pic={this.state.profile_pic}
                                     bio={this.state.bio}
-                                    addBio={this.addBio}
-                                    toggleUploader={this.toggleUploader}
                                 />
                             )}
-                        /> */}
+                        />
 
                         {/* <GoogleMap
                             postal_code={this.state.postal_code}
@@ -159,6 +181,14 @@ export default class App extends Component {
                             street={this.state.street}
                             city={this.state.city}
                         /> */}
+
+                        {/* <Borrowbtn itemId={1} /> */}
+
+                        <Route
+                            exact
+                            path="/requests"
+                            render={() => <BorrowReq userId={this.state.id} />}
+                        />
 
                         <Route
                             exact
@@ -182,15 +212,9 @@ export default class App extends Component {
                         <Route
                             exact
                             path="/add"
-                            render={() => (
-                                <AddTool
-                                    userId={this.state.id}
-                                    // lng={this.state.first}
-                                    // ltd={this.state.last}
-                                />
-                            )}
+                            render={() => <AddTool userId={this.state.id} />}
                         />
-                        {/* <Route
+                        <Route
                             path="/user/:id/tool/:tool-id"
                             render={(props) => (
                                 <Tool
@@ -200,17 +224,11 @@ export default class App extends Component {
                                     id={this.state.id}
                                 />
                             )}
-                        /> */}
+                        />
                         <Route
                             exact
                             path="/my-items"
-                            render={() => (
-                                <MyItems
-                                    userId={this.state.id}
-                                    // lng={this.state.first}
-                                    // ltd={this.state.last}
-                                />
-                            )}
+                            render={() => <MyItems userId={this.state.id} />}
                         />
 
                         {/* <Route

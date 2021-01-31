@@ -8,16 +8,18 @@ import { Link } from "react-router-dom";
 export default function Welcome() {
     return (
         <div className="welcome">
+            <h1 className="welcome-text">
+                Share love with your amazing neighbors, and make the world a bit
+                nicer place!
+            </h1>
+            {/* 
+            <h2 className="now">
+                Sign up now and be in contact with members living within 2 km
+            </h2> */}
             <div className="welcome-container">
-                <div className="welcome-text">
-                    <h2>GoodNeighbor</h2>
+                <img className="background " src="people1.jpg" />
 
-                    <p>Be a Good Neighbor and join our amazing community!</p>
-                </div>
-
-                {/* <div className="welcome-img">
-                    <img src="/welcomepic.png" />
-                </div> */}
+                <img className="welcome-logo" src="/logo1.png" />
 
                 <div className="welcome-table">
                     <HashRouter>

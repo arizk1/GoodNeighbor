@@ -1,8 +1,8 @@
 body {
-    background-color: ghostwhite;
+    background-color: rgb(250, 250, 250);
 }
 body {
-    background-color: #c0d9f4;
+    background-color: #fbfbfb;
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
@@ -50,11 +50,20 @@ body {
 }
 
 .welcome-text {
-    float: left;
     position: absolute;
-    top: 20%;
-    max-width: 50vh;
-    /* z-index: 1000; */
+
+    color: white;
+    z-index: 1000;
+    font-weight: bolder;
+    font-size: 35px;
+    width: 500px;
+    padding: 10px;
+    line-height: 50px;
+    text-shadow: 2px 2px black;
+    font-family: "Knewave", cursive;
+    top: 270px;
+
+    left: 160px;
 }
 
 .welcome-table {
@@ -64,6 +73,25 @@ body {
     left: 60vw;
     transform: translate(-50%, -50%);
     padding-top: 50px;
+}
+
+.background {
+    position: absolute;
+    /* height: 609px;
+    width: 598px; */
+    width: 50.1%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    border-radius: 20px 0px 0px 20px;
+    opacity: 0.75;
+    z-index: 5;
+}
+
+.welcome-logo {
+    z-index: 100;
+    position: absolute;
+    left: 210px;
 }
 
 .welcome-table h2 {
@@ -107,6 +135,7 @@ body {
     max-width: 400px;
     padding: 20px 12px 10px 20px;
     font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    z-index: 1000;
 }
 .form1 li {
     padding: 0;
@@ -192,7 +221,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgb(255, 255, 255, 0.5);
+    background-color: rgb(255, 255, 255);
     margin: auto;
     padding: 10px;
     display: flex;
@@ -218,93 +247,104 @@ body {
 /* ################################## */
 
 .app-container {
-    display: grid;
     height: 100vh;
     width: 100vw;
-    grid-template-rows: 8% 92%;
-    gap: 0px;
 }
 
 .topnav {
-    grid-column-start: 1;
-    grid-column-end: -1;
     background-color: white;
-    /* position: absolute; */
-    top: 0px;
-    /* box-shadow: 0 5px 15px; */
+
+    /* box-shadow: 0 0 5px; */
     display: flex;
-    flex-wrap: wrap;
+    width: 60px;
+    height: 64vh;
+    border-radius: 0px 0px 30px 20px;
+    position: absolute;
+    top: 13%;
+    right: 2.3%;
+    /* justify-content: center; */
     align-items: center;
-    width: 100vw;
 }
 
+.logo {
+    /* position: absolute; */
+    top: 0%;
+    left: 0%;
+    height: 150px;
+    width: 150px;
+    padding: 0;
+    /* position: absolute; */
+
+    /* background: #000; */
+}
 .logo img {
-    justify-self: flex-start;
-    height: 70px;
-    width: 170px;
+    height: 110px;
+    width: 150px;
     align-self: center;
-    padding: 5px;
 }
 
 .topnavL {
     overflow: hidden;
-    position: absolute;
-    right: 10%;
+    /* position: absolute; */
+    /* right: 15%; */
     display: flex;
     padding: 10px;
-    flex-wrap: wrap;
+    align-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1000;
+    animation: moveOver 1s reverse ease-out;
 }
 
 .topnav-links {
-    color: black;
     text-align: center;
-    padding: 14px 16px;
     text-decoration: none;
     font-size: 17px;
-    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    padding: 5px 0;
 }
 
 .topnav-links img {
-    height: 20px;
-    width: 30px;
+    height: 40px;
+    width: 70px;
     object-fit: contain;
     border-radius: 7%;
 }
 
 .topnav-links button {
-    color: black;
     text-align: center;
-    border: none;
     background-color: transparent;
-    padding: 0px 0px;
-    text-decoration: underline;
-    font-size: 17px;
-    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    border: none;
     cursor: pointer;
 }
 
 .topnav-pic {
-    right: 2%;
+    right: 1%;
+    top: 2%;
     position: absolute;
-    align-items: center;
-    align-content: center;
+    border-radius: 50%;
+    border: solid 3px black;
+    height: 91px;
+    width: 91px;
+    transition: 50ms ease-in;
+}
 
-    display: flex;
+.topnav-pic:hover {
 }
 
 .profile-pic {
-    height: 50px;
-    width: 50px;
+    height: 91px;
+    width: 91px;
     object-fit: cover;
-    border-radius: 7%;
+    border-radius: 50%;
 }
 
 .profile-pic-container .profile-pic {
     height: 250px !important;
     width: 250px !important;
-    position: relative;
+    position: absolute;
     object-fit: cover;
-    left: 20px;
+    left: 40px;
+    top: 190px;
     border-radius: 20%;
     padding: 20px 0;
 }
@@ -320,8 +360,8 @@ body {
 }
 
 .tool-pic-container img {
-    height: 40%;
-    width: 20%;
+    height: 270px;
+    width: 170px;
     position: relative;
     object-fit: fill;
     left: 20px;
@@ -331,11 +371,429 @@ body {
 
 .tool-pic-container {
     position: absolute;
-    top: 20%;
-    left: 5%;
+    top: 35%;
+    left: 26%;
+
+    width: 200px;
+    height: 300px;
 }
 .add-tool {
     position: absolute;
-    top: 20%;
-    left: 30%;
+    top: 29%;
+    left: 40%;
+    z-index: 100;
+}
+.share-love {
+    margin: auto;
+    width: 38%;
+}
+
+.topnav-links .tooltiptext {
+    visibility: hidden;
+    background-color: rgb(55, 148, 224);
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    width: 100px;
+    /* top: 100%; */
+    right: 100%;
+    margin-top: 10px;
+    position: absolute;
+    z-index: 1;
+    transition: 50ms ease-in;
+}
+
+.topnav-links:hover .tooltiptext {
+    visibility: visible;
+    transition: 50ms ease-in;
+}
+.topnav-links:hover {
+    background-color: rgb(243, 236, 236);
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.wrapper {
+    position: absolute;
+    display: flex;
+
+    margin: auto;
+    z-index: 100;
+    width: 90%;
+    left: 35%;
+    top: 25%;
+}
+.search-icon {
+    position: absolute;
+    top: 15px;
+    left: 8px;
+    width: 14px;
+}
+
+.search {
+    border: 1px solid grey;
+    border-radius: 10px;
+    height: 40px;
+    width: 40%;
+    padding: 2px 23px 2px 30px;
+    outline: 0;
+    background-color: #f5f5f5;
+}
+
+.search:hover,
+.search:focus {
+    border: 1.5px solid #009688;
+    background-color: white;
+}
+
+.berlin {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    left: 6%;
+    opacity: 50%;
+    object-position: center;
+}
+
+@keyframes moveOver {
+    from {
+        transform: translateX(0px);
+    }
+    to {
+        transform: translateX(100px);
+    }
+}
+
+.results-container {
+    position: absolute;
+    top: 40%;
+    right: 9%;
+    width: 55vw;
+    height: 100%;
+    /* background-color: #e7e3e3; */
+    z-index: 20;
+}
+.results-card {
+    height: 180px;
+    width: 90%;
+    background-color: white;
+    border-radius: 90px 15px 15px 90px;
+    box-shadow: 0 0 1px 0 gray;
+    float: right;
+    position: relative;
+
+    margin-bottom: 20px;
+}
+
+.search-pic {
+    height: 85%;
+    width: 22%;
+    border-radius: 50%;
+    border: solid 4px rgb(55, 139, 172);
+    background-color: rgb(243, 235, 235);
+    position: absolute;
+    left: -6px;
+    top: -3px;
+    padding: 10px;
+    object-fit: fill;
+    margin-left: 5px;
+}
+
+.search-pic img {
+    height: 172px;
+    width: 172px;
+    border-radius: 50%;
+    position: absolute;
+    left: 3px;
+    top: 2px;
+}
+
+.owner-container {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    width: 120px;
+    height: 60px;
+}
+
+.owner-pic {
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    border: solid 2px rgb(55, 139, 172);
+    background-color: rgb(243, 235, 235);
+    position: absolute;
+    right: 120px;
+    top: 0;
+    margin-right: 5px;
+}
+
+.owner-pic img {
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.results-data h3 {
+    position: absolute;
+    /* width: 50px; */
+    padding: 10px;
+    font-size: medium;
+    background-color: yellow;
+    left: 27%;
+    top: 4px;
+}
+.results-data h2 {
+    position: relative;
+    padding: 10px;
+    font-size: medium;
+    left: 27%;
+    /* background-color: yellow; */
+    top: 60px;
+    color: gray;
+}
+.results-data p {
+    position: absolute;
+    padding: 10px;
+    font-size: medium;
+    left: 27%;
+    top: 100px;
+    /* background-color: yellow; */
+}
+
+.available h4 {
+    position: absolute;
+    padding: 10px;
+    font-size: xx-small;
+    right: 18%;
+    top: 70px;
+}
+
+.available .btn {
+    position: absolute;
+    padding: 10px;
+    right: 18%;
+    top: 120px;
+    z-index: 20;
+}
+.map {
+    height: 50vh;
+    width: 37%;
+    z-index: 40;
+    position: absolute;
+    top: 40%;
+    left: 2%;
+}
+
+.search-here {
+    position: absolute;
+    left: 13%;
+    top: 24%;
+}
+
+.add-pic-back {
+    width: 20%;
+    z-index: 1;
+}
+.items-card {
+    height: 150px;
+    width: 400px;
+    background-color: white;
+    border-radius: 90px 15px 15px 90px;
+    /* box-shadow: 0 0 1px 0 gray; */
+    position: relative;
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.items-pic {
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+    left: 0px;
+    border: solid 4px rgb(55, 139, 172);
+    background-color: rgb(243, 235, 235);
+    /* position: absolute;
+    left: -5px;
+    top: -3px; */
+    padding: 10px;
+    object-fit: fill;
+    margin-left: 5px;
+    align-self: start;
+}
+
+.items-pic img {
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+}
+
+.item-data h3 {
+    position: absolute;
+    padding: 10px;
+    font-size: medium;
+    background-color: yellow;
+    left: 155px;
+    top: -5px;
+}
+.item-data h2 {
+    position: relative;
+    padding: 10px;
+    font-size: medium;
+    left: 5px;
+    top: 40px;
+    color: gray;
+    size: 40px;
+}
+
+.edit-buttons {
+    position: absolute;
+    top: 100px;
+    left: 165px;
+}
+
+.edit-buttons button {
+    background: #21086d;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    margin-left: 5px;
+}
+.edit-buttons #remove {
+    background: gray;
+    left: 5px;
+}
+
+.edit-buttons #unavailable {
+    background: gray;
+}
+
+.edit-buttons .unfriend:hover,
+.edit-buttons #unavailable:hover,
+.edit-buttons #remove:hover {
+    background: rgb(145, 24, 24);
+}
+
+.edit-buttons button:hover {
+    background: royalblue;
+}
+
+.my-Items h1 {
+    position: absolute;
+    top: 120px;
+    background-color: yellow;
+}
+.my-Items p {
+    position: relative;
+    top: 10px;
+    padding: 10px 0;
+    margin-bottom: 40px;
+}
+
+.coming-requests h1 {
+    position: absolute;
+    top: 120px;
+    background-color: yellow;
+}
+
+.title {
+    position: absolute;
+    top: 120px;
+    background-color: yellow;
+    margin-bottom: 40px;
+    left: 25px;
+}
+
+.error-message {
+    color: red;
+    margin: auto;
+    width: 40%;
+}
+
+.account-data {
+    position: absolute;
+    top: 190px;
+    left: 500px;
+}
+
+.profile-name {
+    position: absolute;
+    top: 490px;
+    left: 70px;
+}
+
+.modal-box {
+    position: absolute;
+    height: 20%;
+    width: 30%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(255, 255, 255);
+    margin: auto;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 10000;
+}
+
+.modal-box button {
+    background: #21086d;
+    padding: 8px 30px 8px 30px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+.modal-box #delete {
+    background: rgb(145, 24, 24);
+}
+
+.profile-pic-uploader h3 {
+    padding-bottom: 30px;
+}
+
+.bio {
+    background-color: yellow;
+}
+
+.img-del {
+    position: absolute;
+    top: 465px;
+    left: 90px;
+}
+.img-del button {
+    background: #21086d;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    margin-left: 5px;
+}
+
+.img-del button:hover {
+    background: rgb(145, 24, 24);
+}
+
+.borrow-button {
+    background: royalblue;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    margin-left: 5px;
+}
+
+.borrow-button:hover {
+    background: #21086d;
 }

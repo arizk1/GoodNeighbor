@@ -1,5 +1,3 @@
-import { NormalModule } from "webpack";
-
 export default function (state = {}, action) {
     if (action.type == "ALL_ITEMS") {
         state = {
@@ -7,11 +5,12 @@ export default function (state = {}, action) {
             items: action.items,
         };
     }
+
     if (action.type == "UNAVAILABLE") {
         state = {
             ...state,
             items: state.items.map((item) => {
-                if (item.id == action.id) {
+                if (item.id == action.itemId) {
                     return {
                         ...item,
                         available: false,
@@ -26,7 +25,7 @@ export default function (state = {}, action) {
         state = {
             ...state,
             items: state.items.map((item) => {
-                if (item.id == action.id) {
+                if (item.id == action.itemId) {
                     return {
                         ...item,
                         available: true,
@@ -42,7 +41,7 @@ export default function (state = {}, action) {
         state = {
             ...state,
             items: state.items.map((item) => {
-                if (item.id == action.id) {
+                if (item.id == action.itemId) {
                     return {
                         ...item,
                         available: null,
@@ -53,5 +52,59 @@ export default function (state = {}, action) {
             }),
         };
     }
+
+    if (action.type == "ALL_REQS") {
+        state = {
+            ...state,
+            requests: action.requests,
+        };
+    }
+
+    if (action.type == "ACCEPT_REQ") {
+        state = {
+            ...state,
+            requests: state.requests.map((req) => {
+                if (req.item_id == action.itemId) {
+                    return {
+                        ...req,
+                        accepted: true,
+                    };
+                } else {
+                    return req;
+                }
+            }),
+        };
+    }
+    if (action.type == "REJECT_REQ") {
+        state = {
+            ...state,
+            requests: state.requests.map((req) => {
+                if (req.item_id == action.itemId) {
+                    return {
+                        ...req,
+                        accepted: null,
+                    };
+                } else {
+                    return req;
+                }
+            }),
+        };
+    }
+
+    if (action.type == "GET_RECENT_ITEMS") {
+        state = {
+            ...state,
+            recent: action.recentItems,
+        };
+        console.log(state);
+    }
+
+    if (action.type == "GET_ITEMS_FOR") {
+        state = {
+            ...state,
+            search: action.searchItems,
+        };
+    }
+
     return state;
 }

@@ -14,7 +14,7 @@ export default function SimpleMap() {
 
     return (
         // Important! Always set the container height explicitly
-        <div style={{ height: "100vh", width: "100%" }}>
+        <div style={{ height: "30vh", width: "30%" }}>
             <GoogleMapReact
                 bootstrapURLKeys={{
                     key: "AIzaSyC7IIpKum64FkifUisD1XthrpAADpamFIU",
@@ -22,11 +22,11 @@ export default function SimpleMap() {
                 defaultCenter={defaultProps.center}
                 defaultZoom={defaultProps.zoom}
             >
-                <AnyReactComponent
+                {/* <AnyReactComponent
                     lat={52.50573}
                     lng={13.34786}
                     text="My Marker"
-                />
+                /> */}
             </GoogleMapReact>
         </div>
     );

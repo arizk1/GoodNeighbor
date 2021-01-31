@@ -61,6 +61,9 @@ export default function AddTool(userId) {
         location.replace("/add");
     };
 
+    // const handelEdit = () => {
+    //     setView(3);
+    // };
     // const [errorGet, get] = useGet("/tool/delete/pic");
 
     // const handleKeyPress = (e) => {
@@ -96,7 +99,7 @@ export default function AddTool(userId) {
                 /> */}
 
                 <Route
-                    path="/user/:id/:toolid"
+                    path="/item/:toolid"
                     render={(props, toolInfo, ToolToggleUploader) => (
                         <Tool
                             userId={toolInfo.userId}
@@ -110,13 +113,17 @@ export default function AddTool(userId) {
                 />
 
                 <section>
+                    <h2 className="share-love">
+                        Share love with your goodNeighbors
+                    </h2>
                     <div className="tool-pic-container">
                         <ToolPic
                             url={toolInfo.url}
                             ToolToggleUploader={ToolToggleUploader}
                         />
                     </div>
-                    {/* <button onClick={get}>Delete profile pic</button> */}
+
+                    <img className="add-pic-back" src="./dream.png" />
                 </section>
 
                 {error && (
@@ -127,7 +134,7 @@ export default function AddTool(userId) {
                     <section className="add-tool">
                         <ul className="form1">
                             <li>
-                                <label>Choose a type for your item:</label>
+                                <label>Choose the type of your item:</label>
                                 <select
                                     className="field-divided"
                                     name="type"
@@ -154,6 +161,8 @@ export default function AddTool(userId) {
                                 <textarea
                                     name="description"
                                     placeholder="Add a discription if any .."
+                                    cols="30"
+                                    rows="5"
                                     onChange={(e) => handleChange(e)}
                                 ></textarea>
                             </li>
@@ -162,6 +171,8 @@ export default function AddTool(userId) {
                                 <textarea
                                     name="condition"
                                     placeholder="State your conditions if any .."
+                                    cols="30"
+                                    rows="5"
                                     onChange={(e) => handleChange(e)}
                                 ></textarea>
                             </li>
